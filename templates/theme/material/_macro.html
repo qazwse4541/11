@@ -1,0 +1,104 @@
+{% macro pagination_widget(pagination, endpoint) %}
+<br>
+<style type="text/css">
+    #page a {
+        text-align: center;
+        position: relative;
+        display: inline-block;
+        color: inherit;
+        text-align: center;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        white-space: nowrap;
+        vertical-align: middle;
+        padding: 0!important;
+        margin: auto;
+        overflow: hidden;
+        font-size: 24px;
+        line-height: normal!important;
+        border-radius: 50%;
+        margin-right: 5px;
+        box-shadow: 0 3px 5px -1px rgba(0, 0, 0, .2), 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12);
+        width: 20px;
+        min-width:30px;
+        height: 30px;
+        outline: 0;
+        user-select: none;
+        background: 0 0;
+        border: none;
+        cursor: pointer;
+        zoom: 1;
+        webkit-transition: all .2s cubic-bezier(.4, 0, .2, 1), box-shadow .2s cubic-bezier(.4, 0, 1, 1), -webkit-transform .2s;
+        transition: all .2s cubic-bezier(.4, 0, .2, 1), box-shadow .2s cubic-bezier(.4, 0, 1, 1), -webkit-transform .2s;
+        transition: all .2s cubic-bezier(.4, 0, .2, 1), box-shadow .2s cubic-bezier(.4, 0, 1, 1), transform .2s;
+        transition: all .2s cubic-bezier(.4, 0, .2, 1), box-shadow .2s cubic-bezier(.4, 0, 1, 1), transform .2s, -webkit-transform .2s;
+        -webkit-transform: scale(1) translateZ(0);
+        transform: scale(1) translateZ(0);
+        will-change: transform;
+    }
+    .moe-page-div {
+       max-width: 600px;
+       margin-left: auto;
+       margin-right: auto;
+    }
+
+    @media (max-width: 599px){
+     .moe-page-div {
+       max-width: 85%;
+     }
+    }
+</style>
+    {%if pagination.pages>1%}
+        <center>
+            <div id="page">
+                {% if pagination.has_prev %}
+                <a href="{{ url_for(endpoint,page = pagination.page - 1, **kwargs) |safe}}" class="mdui-fab mdui-fab-mini mdui-ripple">&lt;</a>
+                {%endif%}
+
+                {% for p in pagination.iter_pages() %}
+                  {% if p %}
+                    {%if p == pagination.page%}
+                      <a href="{{ url_for(endpoint, page = p,**kwargs) }}" class="mdui-color-blue mdui-shadow-13">{{ p }}</a>
+                    {%else%}
+                      <a href="{{ url_for(endpoint, page = p,**kwargs) }}">{{ p }}</a>
+                    {%endif%}
+                  {%else%}
+                      <a href="javascript:void(0);">&hellip;</a>
+                  {%endif%}
+                {%endfor%}
+
+                {% if pagination.has_next %}
+                <a href="{{ url_for(endpoint,page = pagination.page + 1, **kwargs) |safe}}">&gt;</a>
+                {%endif%}
+            </div>
+        </center>
+    {%endif%}
+{% endmacro %}
+
+{% macro Arraw(endpoint,name,cur_type,sortby,order) %}
+    <a href="{% if order=='asc' %}{{url_for(endpoint,sortby=cur_type,order='desc',**kwargs)|safe}}{%else%}{{url_for(endpoint,sortby=cur_type,order='asc',**kwargs)|safe}}{%endif%}">
+    {{ name }}
+    {% if cur_type==sortby %}
+        {% if order=='asc' %}
+            <i class="mdui-icon material-icons">arrow_upward</i>
+        {% else %}
+            <i class="mdui-icon material-icons">arrow_downward</i>
+        {% endif %}
+    {% endif %}
+    </a>
+{% endmacro %}
+
+
+{% macro Admin_Arraw(name,cur_type,sortby,order) %}
+    <a href="{% if order=='asc' %}{{url_for('admin.manage',sortby=cur_type,order='desc',**kwargs)|safe}}{%else%}{{url_for('admin.manage',sortby=cur_type,order='asc',**kwargs)|safe}}{%endif%}">
+    {{ name }}
+    {% if cur_type==sortby %}
+        {% if order=='asc' %}
+            <i class="mdui-icon material-icons">arrow_upward</i>
+        {% else %}
+            <i class="mdui-icon material-icons">arrow_downward</i>
+        {% endif %}
+    {% endif %}
+    </a>
+{% endmacro %}

@@ -1,0 +1,64 @@
+{%extends 'admin/layout.html'%} {%block content%}
+<style type="text/css">
+#output {
+  background-color: #000000;
+    color: #fff;
+    font-family: monospace, fixed;
+    font-size: 15px;
+    line-height: 18px;
+}
+</style>
+<div class="mdui-container-fluid">
+    <div class="mdui-typo">
+        <h1> 上传管理 <small>文件上传添加和管理</small></h1>
+    </div>
+    <div class="mdui-row">
+        <form action="" method="post">
+            <div class="mdui-col-xs-3">
+                  <label class="mdui-textfield-label">选择网盘</label>
+                  <select class="mdui-select" name="user" mdui-select>
+                    {%for user in get_od_user()%}
+                    {%if user[1]!='添加网盘'%}
+                    <option value="{{user[0]}}">{{user[1]}}</option>
+                    {%endif%}
+                    {%endfor%}
+                  </select>
+            </div>
+            <div class="mdui-col-xs-4">
+                    <label class="mdui-textfield-label">服务器文件/文件夹</label>
+                    <input name="local" class="mdui-textfield-input" type="text" value="{%if local%}{{local}}{%else%}/{%endif%}"/>
+            </div>
+            <div class="mdui-col-xs-3">
+                    <label class="mdui-textfield-label">远程目录</label>
+                    <input name="remote" class="mdui-textfield-input" type="text" value="{%if remote%}{{remote}}{%endif%}" />
+            </div>
+            <div class="mdui-col-xs-2" style="padding-top: 34px;">
+                <button type="submit" name="upload" value="1" class="mdui-btn mdui-btn-block mdui-color-green-600 mdui-ripple">
+                    <i class="mdui-icon material-icons">&#xe2c3;</i> 上传
+                </button>
+            </div>
+        </form>
+    </div>
+    <hr>
+      <div class="mdui-textfield">
+          <textarea class="mdui-textfield-input" rows="20" placeholder="进度" id="output"></textarea>
+      </div>
+</div>
+<script>
+  {%if local%}
+  var source = new EventSource("{{url_for('admin.web_console',local=local,remote=remote,action=action,user=user)|safe}}");
+  source.onmessage = function(event) {
+    if(event.data=='end'){
+        source.close();
+    }
+    else{
+        document.getElementById("output").innerHTML += event.data + "\n";
+        document.getElementById("output").scrollTop = document.getElementById('output').scrollHeight;
+    }
+  }
+  source.addEventListener('error',function(e){
+      source.close();
+  })
+  {%endif%}
+</script>
+{%endblock content%}

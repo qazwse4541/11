@@ -1,0 +1,27 @@
+<div class="mdui-container-fluid">
+    <div class="mdui-appbar mdui-appbar-scroll-hide">
+        <div class="mdui-tab mdui-color-theme" mdui-tab>
+            {%for user in get_od_user()%}
+            {%if user[1]!='添加网盘'%}
+                <a href="{{user[2]}}" class="mdui-ripple mdui-ripple-white{%if cur_user==user[0]%} mdui-tab-active{%endif%}" id="{{user[0]}}">
+                    <i class="mdui-icon material-icons">&#xe2bf;</i>
+                    <label>{{user[1]}}</label>
+                </a>
+            {%endif%}
+            {%endfor%}
+         </div>
+        <div class="mdui-toolbar nexmoe-item">
+            <a href="{{url_for('.index',path=cur_user+':/')}}">{{cur_user}}</a>
+            {%if path%}
+                {%for idx,p in enumerate(path_list(path))%}
+                    <i class="mdui-icon material-icons mdui-icon-dark" style="margin:0;">chevron_right</i>
+                    {%if idx==len(path_list(path))-1%}
+                        <a href="#">{{p|replace(cur_user+':/','')|replace(cur_user+':','')}}</a>
+                    {%else%}
+                        <a href="{{url_for('.index',path='/'.join(path_list(path)[:idx+1]))}}">{{p|replace(cur_user+':/','')|replace(cur_user+':','')}}</a>
+                    {%endif%}
+                {%endfor%}
+            {%endif%}
+        </div>
+    </div>
+</div>

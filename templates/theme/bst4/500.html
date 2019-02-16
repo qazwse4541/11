@@ -1,0 +1,24 @@
+{%extends 'theme/'+GetConfig('theme')+'/layout.html'%}
+{% import 'theme/'+GetConfig('theme')+'/_macro.html' as macros %}
+{%block content%}
+<div class="container">
+    <h2>Opps....500错误！</h2>
+    <p>一般是因为服务器内部出现问题，可检查</p>
+    <ul>
+        <li>Redis、MongoDB是否安装？是否运行？</li>
+        <li>
+            <p>如果上诉没问题，可清空Redis缓存：</p>
+            <pre><code class="lang-text">redis-cli
+ &gt; FLUSHALL
+</code></pre>
+        </li>
+        <li>
+            <p>如清空Redis缓存还有问题，可手动运行网站查看错误</p>
+            <pre><code class="lang-text">supervisorctl -c supervisord.conf stop pyone &amp;&amp; gunicorn -k eventlet -b 0:34567 run:app
+</code></pre>
+            <p>然后再访问页面，查看ssh的错误提示</p>
+        </li>
+    </ul>
+    </li>
+</div>
+{%endblock content%}

@@ -1,0 +1,86 @@
+{%extends 'admin/layout.html'%}
+
+{%block content%}
+<div class="mdui-container-fluid">
+
+    <div class="mdui-typo">
+      <h1> 基本设置 <small>设置PyOne基本参数</small></h1>
+    </div>
+    <form action="{{url_for('admin.setting')}}" method="POST">
+
+          <h4>主题选择</h4>
+          <select class="mdui-select" name="theme" mdui-select>
+            {%for t in GetThemeList()%}
+              <option value="{{t}}"{%if GetConfig('theme')==t%} selected{%endif%}>{{t}}</option>
+            {%endfor%}
+          </select>
+
+        <div class="mdui-textfield">
+          <h4>网站名称</h4>
+          <input class="mdui-textfield-input" type="text" name="title" value="{{GetConfig('title')}}"/>
+        </div>
+
+        <div class="mdui-textfield">
+          <h4>网站名称前缀（默认：index of）</h4>
+          <input class="mdui-textfield-input" type="text" name="title_pre" value="{{GetConfig('title_pre')}}"/>
+        </div>
+
+        <div class="mdui-textfield">
+          <h4>缓存过期时间(秒)</h4>
+          <input class="mdui-textfield-input" type="text" name="downloadUrl_timeout" value="{{GetConfig('downloadUrl_timeout')}}"/>
+        </div>
+
+        <div class="mdui-textfield">
+          <h4>防盗链设置（不限制，则设置：no-referrer；仅限3pp.me调用，则设置：3pp.me；可调用域名通过英文逗号分隔）</h4>
+          <input class="mdui-textfield-input" type="text" name="allow_site" value="{{GetConfig('allow_site')}}"/>
+        </div>
+
+        <div class="mdui-textfield">
+          <h4>修改后台密码（如果不修改，则无需输入）</h4>
+          <input class="mdui-textfield-input" type="password" name="password1" placeholder="请输入新密码" />
+          <input class="mdui-textfield-input" type="password" name="password2" placeholder="请再次输入新密码" />
+        </div>
+
+        <div class="mdui-textfield">
+          <h4>Aria2信息编辑</h4>
+          <div class="mdui-panel" mdui-panel>
+              <div class="mdui-panel-item">
+                <div class="mdui-panel-item-header">点击配置</div>
+                <div class="mdui-panel-item-body">
+                  <h5>Aria2协议</h5>
+                  <select class="mdui-select" name="ARIA2_SCHEME" mdui-select>
+                    <option value="http"{%if GetConfig('ARIA2_SCHEME')=='http'%} selected{%endif%}>http</option>
+                    <option value="https"{%if GetConfig('ARIA2_SCHEME')=='https'%} selected{%endif%}>https</option>
+                  </select>
+                  <h5>主机（默认localhost。如果不是本机的aria2，怎么下载到本机然后上传？？？）</h5>
+                  <input class="mdui-textfield-input" type="text" readonly="readonly" name="ARIA2_HOST" placeholder="请输入aria2主机" value="{{GetConfig('ARIA2_HOST')}}" />
+                  <h5>端口</h5>
+                  <input class="mdui-textfield-input" type="text" name="ARIA2_PORT" placeholder="请输入aria2端口" value="{{GetConfig('ARIA2_PORT')}}" />
+                  <h5>秘钥</h5>
+                  <input class="mdui-textfield-input" type="text" name="ARIA2_SECRET" placeholder="请输入aria2秘钥" value="{{GetConfig('ARIA2_SECRET')}}" />
+                </div>
+              </div>
+          </div>
+        </div>
+
+        <div class="mdui-textfield">
+          <h4>搜索结果是否展示“加密文件”（开启之后，前台搜索结果会展示出加密文件夹及加密文件夹下的文件）</h4>
+          <label class="mdui-switch">
+            <input type="checkbox" name="show_secret" {%if GetConfig('show_secret')=='on'%}checked{%endif%}/>
+            <i class="mdui-switch-icon"></i>
+          </label>
+        </div>
+
+        <div class="mdui-textfield">
+          <h4>加密文件夹下的文件是否加密（本选项是配合前一个选项新增的选项，看个人需求开启）</h4>
+          <label class="mdui-switch">
+            <input type="checkbox" name="encrypt_file" {%if GetConfig('encrypt_file')=='on'%}checked{%endif%}/>
+            <i class="mdui-switch-icon"></i>
+          </label>
+        </div>
+       <button type="submit" class="mdui-btn mdui-color-theme-accent mdui-ripple mdui-float-right">
+        <i class="mdui-icon material-icons">&#xe161;</i> 保存
+       </button>
+    </form>
+</div>
+{%endblock content%}
